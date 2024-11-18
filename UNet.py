@@ -90,36 +90,36 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 
 # Training Loop
-num_epochs = 20
-for epoch in range(num_epochs):
-    model.train()
-    train_loss = 0
-    for images, labels in train_loader:
-        images, labels = images, labels.unsqueeze(1)  # Shape [batch_size, 1]
-        outputs = model(images)  # Shape [batch_size, 1]
-        loss = criterion(outputs, labels)
+# num_epochs = 20
+# for epoch in range(num_epochs):
+#     model.train()
+#     train_loss = 0
+#     for images, labels in train_loader:
+#         images, labels = images, labels.unsqueeze(1)  # Shape [batch_size, 1]
+#         outputs = model(images)  # Shape [batch_size, 1]
+#         loss = criterion(outputs, labels)
 
         
-        # Backward pass
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+#         # Backward pass
+#         optimizer.zero_grad()
+#         loss.backward()
+#         optimizer.step()
         
-        train_loss += loss.item()
+#         train_loss += loss.item()
     
-    # Validation Loop
-    model.eval()
-    val_loss = 0
-    with torch.no_grad():
-        for images, labels in val_loader:
-            images, labels = images, labels.unsqueeze(1)
-            outputs = model(images)
-            loss = criterion(outputs, labels)
-            val_loss += loss.item()
+#     # Validation Loop
+#     model.eval()
+#     val_loss = 0
+#     with torch.no_grad():
+#         for images, labels in val_loader:
+#             images, labels = images, labels.unsqueeze(1)
+#             outputs = model(images)
+#             loss = criterion(outputs, labels)
+#             val_loss += loss.item()
 
-    print(f"Epoch [{epoch+1}/{num_epochs}], "
-          f"Train Loss: {train_loss/len(train_loader):.4f}, "
-          f"Val Loss: {val_loss/len(val_loader):.4f}")
+#     print(f"Epoch [{epoch+1}/{num_epochs}], "
+#           f"Train Loss: {train_loss/len(train_loader):.4f}, "
+#           f"Val Loss: {val_loss/len(val_loader):.4f}")
 
 
 # Model saving
@@ -131,14 +131,14 @@ model.load_state_dict(torch.load("defect_model.pth"))
 model.eval()
 
 # Test on a new image
-test_image_path = './images/test/frame_482.jpg'
+test_image_path = './images/test/frame_41.jpg'
 test_image = Image.open(test_image_path).convert('L')
 test_image = transform(test_image).unsqueeze(0)
 
 with torch.no_grad():
     probability = model(test_image).item()
     print(f"Probability of defect: {probability:.4f}")
-    if probability > 0.35:
+    if probability > 0.5:
         print("Defect detected.")
     else:
         print("No defect detected.")
